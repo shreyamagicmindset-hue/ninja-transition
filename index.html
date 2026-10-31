@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ninja Transition</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+    font-family: Arial, sans-serif;
+}
+
+#stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+
+#smoke {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.cloud {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(235,235,235,0.95) 0%,
+        rgba(170,170,170,0.8) 35%,
+        rgba(100,100,100,0.35) 65%,
+        transparent 75%
+    );
+    filter: blur(18px);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+#log {
+    position: absolute;
+    width: 220px;
+    height: 85px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    border-radius: 12px;
+    background: linear-gradient(
+        90deg,
+        #50301b,
+        #b77a43,
+        #754322,
+        #c18a53,
+        #59331d
+    );
+    border: 5px solid #422515;
+    box-shadow: inset 0 0 15px #321b0c;
+}
+
+#log::before,
+#log::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: rgba(50,25,10,0.6);
+}
+
+#log::before {
+    top: 25px;
+}
+
+#log::after {
+    bottom: 25px;
+}
+
+#stage.active #smoke {
+    opacity: 1;
+}
+
+#stage.active .cloud {
+    animation: smoke 2s ease-out forwards;
+}
+
+#stage.active #log {
+    animation: logAppear 0.5s 1.2s ease-out forwards;
+}
+
+@keyframes smoke {
+    0% {
+        transform: translate(-50%, -50%) scale(0.1);
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+}
+
+@keyframes logAppear {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+#controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div id="stage">
+
+    <div id="smoke">
+        <div class="cloud"></div>
+        <div class="cloud" style="animation-delay:0.2s"></div>
+        <div class="cloud" style="animation-delay:0.4s"></div>
+    </div>
+
+    <div id="log"></div>
+
+    <div id="controls">
+        <button onclick="normal()">F1 - NORMAL</button>
+        <button onclick="substitution()">F2 - JUTSU</button>
+    </div>
+
+</div>
+
+<script>
+const stage = document.getElementById("stage");
+
+function normal() {
+    stage.classList.remove("active");
+}
+
+function substitution() {
+    stage.classList.remove("active");
+
+    void stage.offsetWidth;
+
+    stage.classList.add("active");
+
+    setTimeout(() => {
+        stage.classList.remove("active");
+    }, 3500);
+}
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "F1") {
+        event.preventDefault();
+        normal();
+    }
+
+    if (event.key === "F2") {
+        event.preventDefault();
+        substitution();
+    }
+});
+</script>
+
+</body>
+</html>
